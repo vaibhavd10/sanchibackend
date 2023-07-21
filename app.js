@@ -1,36 +1,38 @@
-import express from 'express'
+import express from "express";
 import connectDB from "./db/connectDb.js";
 
-import cors from 'cors'
-import bodyParser from 'body-parser';
+import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+dotenv.config();
 
-const app = express()
-const port = process.env.PORT || '8000'
-const DATABASE_URL = process.env.DATABASE_URL ||  "mongodb+srv://garbage:1234@cluster0.sdziuo5.mongodb.net/?retryWrites=true&w=majority"
+const app = express();
+const port = process.env.PORT || "8000";
+console.log(port);
+const DATABASE_URL = process.env.DATABASE_URL;
+console.log(DATABASE_URL);
 
-
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors())
-app.options("*",cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.options("*", cors());
 
 // Database Connection
 connectDB(DATABASE_URL);
 
 // JSON
-app.use(express.json())
+app.use(express.json());
 
 // Load Routes
-import user from './router/user.js'
-app.use("/api", user)
+import user from "./router/user.js";
+app.use("/api", user);
 
-import complain from'./router/complains.js'
-app.use("/api", complain)
+// Product routes
+import product from "./router/product.js";
+app.use("/api/product", product);
 
-
-
+// import complain from "./router/complains.js";
+// app.use("/api", complain);
 
 app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`)
- })
-
+  console.log(`Server listening at http://localhost:${port}`);
+});

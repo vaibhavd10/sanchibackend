@@ -30,9 +30,9 @@ router.get("/user/:id", async (req, res) => {
 
 //register a user
 router.post("/registerUser", async (req, res) => {
-  const { name, email, password, city, state, contact, latitude, longitude } =
+  const { name, email, password, city, state, contact,role, latitude, longitude } =
     req?.body;
-
+console.log(req.body)
   const userExist = await User.findOne({ email: email });
   if (userExist) {
     res.status(500).json({ message: "User already exists", status: false });
@@ -50,6 +50,7 @@ router.post("/registerUser", async (req, res) => {
       contact,
       latitude,
       longitude,
+      role,
       password: Hash,
     });
 

@@ -34,7 +34,7 @@ router.post("/create", async (req, res) => {
 router.get("/get", async (req, res) => {
   try {
     let product = await Product.find();
-    console.log("product ---", product);
+    // console.log("product ---", product);
     res.status(200).json({ productlist: product });
   } catch (error) {
     console.log("Product list get err --", error);

@@ -35,7 +35,6 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "retailer",
     },
     userStatus: {
       type: String,

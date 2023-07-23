@@ -49,7 +49,7 @@ app.get('/display', (req, res) => {
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: 'http://localhost:8000/api/product/get', // Replace with your actual API endpoint
+    url: 'https://san-sclo.onrender.com/api/product/get', // Replace with your actual API endpoint
     headers: {}
   };
 

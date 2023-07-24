@@ -40,7 +40,7 @@ router.post("/registerUser", async (req, res) => {
     role,
     latitude,
     longitude,
-  } = req?.body;
+  } = req?.body.userData;
   console.log("dghsdg", req?.body);
   const userExist = await User.findOne({ email: email });
   if (userExist) {

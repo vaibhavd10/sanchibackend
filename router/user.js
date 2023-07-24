@@ -30,18 +30,44 @@ router.get("/user/:id", async (req, res) => {
 
 //register a user
 router.post("/registerUser", async (req, res) => {
-  const { name, email, password, city, state, contact,role, latitude, longitude } =
-    req?.body;
-console.log(req.body)
+  const {
+    name,
+    email,
+    password,
+    city,
+    state,
+    contact,
+    role,
+    latitude,
+    longitude,
+  } = req?.body;
+  console.log("dghsdg", req?.body);
   const userExist = await User.findOne({ email: email });
   if (userExist) {
     res.status(500).json({ message: "User already exists", status: false });
     return;
   }
 
-  const Hash = await bcrypt.hash(password, 10);
+  const query = { city: city };
+  console.log("cityy", query);
 
-  try {
+  let datasss = await User.find(query);
+  let userRole, userid;
+  console.log("djfhdjhfdhf", datasss);
+  datasss.map((C) => {
+    console.log("role--", C.role);
+    if (C.role == "Distributor") {
+      userRole = C.role;
+      userid = C._id;
+    }
+  });
+  console.log("userrole--", userRole);
+  console.log("userid --", userid);
+  if (userRole == "Distributor") {
+    console.log("sdsj");
+    // distributorid = userid;
+    // console.log("sdfdddsd", distributorid);
+    const Hash = await bcrypt.hash(password, 10);
     const data = new User({
       name,
       email,
@@ -52,14 +78,17 @@ console.log(req.body)
       longitude,
       role,
       password: Hash,
+      distributor: userid,
     });
+
+    console.log("sddsd", data);
 
     const user = await data.save();
     res
       .status(201)
       .json({ message: "Data added", status: true, userdata: user });
-  } catch (err) {
-    console.log(err);
+  } else {
+    res.status(500).json({ message: "Something wrong !!" });
   }
 });
 

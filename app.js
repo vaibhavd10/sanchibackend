@@ -45,11 +45,11 @@ const __dirname = dirname(__filename);
 // *******************************************************
 // Serve the HTML page with the API data
 app.get('/display', (req, res) => {
-  const { name, contact } = req.query;
+  const { name, contact,distributor } = req.query;
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
-    url: 'https://san-sclo.onrender.com/api/product/get', // Replace with your actual API endpoint
+    url: `https://san-sclo.onrender.com/api/product/get-updated/${distributor}`, // Replace with your actual API endpoint
     headers: {}
   };
 

@@ -30,7 +30,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// all product details
+// all product details only show admin
 router.get("/get", async (req, res) => {
   try {
     let product = await Product.find();
@@ -42,7 +42,86 @@ router.get("/get", async (req, res) => {
   }
 });
 
+router.get("/get-updated/:id", async (req, res) => {
+  const { id } = req?.params;
+  console.log(id);
+  try {
+    let product = await Product.find();
+    let producthistoryPrice;
+    let historydistributor = [];
+
+    product.map((P) => {
+      if (P.history.length === 0) {
+        return null;
+      } else {
+        P.history.map((D) => {
+          console.log("object", D.updatedBy);
+          if (D.updatedBy == id) {
+            historydistributor.push({ D });
+          }
+        });
+        let length = historydistributor.length - 1;
+        let historyprice = historydistributor[length].D.price;
+        console.log("object=--", historyprice);
+        P.price = historyprice;
+      }
+    });
+
+    res.status(200).json({ productlist: product });
+  } catch (error) {
+    console.log("Product list get err --", error);
+    res.status(500).json({ error: error });
+  }
+});
+
+// all product details changed by distributors
+// router.get("/get-updated", async (req, res) => {
+//   try {
+//     // Fetch all products
+//     const products = await Product.find();
+
+//     // Iterate through each product and extract the price history
+//     const productDetailsWithHistory = products.map((product) => {
+//       const {
+//         _id,
+//         productname,
+//         unit,
+//         price,
+//         MRP,
+//         history, // This is an array containing price history
+//       } = product;
+
+//       // Extract the price history details only, discarding other history data like "updatedBy" and "updatedDate"
+//       const priceHistory = history.map((historyItem) => {
+//         return {
+//           price: historyItem.price,
+//           updatedDate: historyItem.updatedDate,
+//         };
+//       });
+
+//       console.log(priceHistory.price);
+
+//       // Return the product details along with the price history
+//       return {
+//         _id,
+//         productname,
+//         unit,
+//         price,
+//         MRP,
+//         history: priceHistory.price,
+//       };
+//     });
+
+//     // Respond with the product details along with their price history
+//     res.json(productDetailsWithHistory);
+//   } catch (error) {
+//     console.log("Error fetching product details", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
 // Single Product Get by using product id
+
 router.get("/get/:id", async (req, res) => {
   const { id } = req?.params;
   try {
@@ -83,8 +162,8 @@ router.put("/update/:id", async (req, res) => {
 });
 
 // Update product price by admin & distributor
-router.put("/:id/updatePrice", authMiddleware, async (req, res) => {
-  const { price } = req?.body;
+router.put("/:id/updatePrice", async (req, res) => {
+  const { price, userid } = req?.body.updateProduct;
   const { id } = req?.params;
   console.log("id ---", id);
 
@@ -103,7 +182,7 @@ router.put("/:id/updatePrice", authMiddleware, async (req, res) => {
     // Save price change to product history
     const historyEntry = {
       price: price,
-      updatedBy: req?.user._id, // Assuming you have the user's ID from the authentication middleware.
+      updatedBy: userid, // Assuming you have the user's ID from the authentication middleware.
     };
     console.log("his---", historyEntry);
     updatedProduct.history.push(historyEntry);

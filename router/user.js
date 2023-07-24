@@ -47,47 +47,70 @@ router.post("/registerUser", async (req, res) => {
     res.status(500).json({ message: "User already exists", status: false });
     return;
   }
+  const Hash = await bcrypt.hash(password, 10);
+  try {
+    if (role == "retailer") {
+      const query = { city: city };
+      console.log("cityy", query);
 
-  const query = { city: city };
-  console.log("cityy", query);
+      let datasss = await User.find(query);
+      let userRole, userid;
+      // console.log("djfhdjhfdhf", datasss);
+      datasss.map((C) => {
+        console.log("role--", C.role);
+        if (C.role == "Distributor") {
+          userRole = C.role;
+          userid = C._id;
+        }
+      });
+      // console.log("userrole--", userRole);
+      // console.log("userid --", userid);
+      if (userRole == "Distributor") {
+        console.log("sdsj");
+        // distributorid = userid;
+        // console.log("sdfdddsd", distributorid);
 
-  let datasss = await User.find(query);
-  let userRole, userid;
-  console.log("djfhdjhfdhf", datasss);
-  datasss.map((C) => {
-    console.log("role--", C.role);
-    if (C.role == "Distributor") {
-      userRole = C.role;
-      userid = C._id;
+        const data = new User({
+          name,
+          email,
+          city,
+          state,
+          contact,
+          latitude,
+          longitude,
+          role,
+          password: Hash,
+          distributor: userid,
+        });
+
+        // console.log("sddsd", data);
+
+        const user = await data.save();
+        res
+          .status(201)
+          .json({ message: "Data added", status: true, userdata: user });
+      } else {
+        const data = new User({
+          name,
+          email,
+          city,
+          state,
+          contact,
+          latitude,
+          longitude,
+          role,
+          password: Hash,
+        });
+
+        // console.log("sddsd", data);
+
+        const user = await data.save();
+        res
+          .status(201)
+          .json({ message: "Data added", status: true, userdata: user });
+      }
     }
-  });
-  console.log("userrole--", userRole);
-  console.log("userid --", userid);
-  if (userRole == "Distributor") {
-    console.log("sdsj");
-    // distributorid = userid;
-    // console.log("sdfdddsd", distributorid);
-    const Hash = await bcrypt.hash(password, 10);
-    const data = new User({
-      name,
-      email,
-      city,
-      state,
-      contact,
-      latitude,
-      longitude,
-      role,
-      password: Hash,
-      distributor: userid,
-    });
-
-    console.log("sddsd", data);
-
-    const user = await data.save();
-    res
-      .status(201)
-      .json({ message: "Data added", status: true, userdata: user });
-  } else {
+  } catch (error) {
     res.status(500).json({ message: "Something wrong !!" });
   }
 });

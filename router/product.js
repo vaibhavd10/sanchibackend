@@ -58,6 +58,8 @@ router.get("/get-updated/:id", async (req, res) => {
           console.log("object", D.updatedBy);
           if (D.updatedBy == id) {
             historydistributor.push({ D });
+          }else {
+            return null
           }
         });
         let length = historydistributor.length - 1;

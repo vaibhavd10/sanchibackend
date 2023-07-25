@@ -44,7 +44,7 @@ router.get("/get", async (req, res) => {
 
 router.get("/get-updated/:id", async (req, res) => {
   const { id } = req?.params;
-  console.log(id);
+  console.log("iddddd",id);
   try {
     let product = await Product.find();
     let producthistoryPrice;

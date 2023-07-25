@@ -57,8 +57,10 @@ router.get("/get-updated/:id", async (req, res) => {
         P.history.map((D) => {
           console.log("object", D.updatedBy);
           if (D.updatedBy == id) {
-            historydistributor.push({ D });
+            console.log("id match")
+            historydistributor.push( D );
           }else {
+            console.log("id not match")
             return null
           }
         });

@@ -58,7 +58,7 @@ router.get("/get-updated/:id", async (req, res) => {
           console.log("object", D.updatedBy);
           if (D.updatedBy == id) {
             console.log("id match")
-            historydistributor.push( D );
+            historydistributor.push( {D} );
           }else {
             console.log("id not match")
             return null
@@ -70,6 +70,8 @@ router.get("/get-updated/:id", async (req, res) => {
         }else{
           console.log("history distributor length is not 0")
           let length = historydistributor.length - 1;
+          console.log("length ----",length)
+          console.log("dataaa",historydistributor[length].D.price)
         let historyprice = historydistributor[length].D.price;
         console.log("object=--", historyprice);
         P.price = historyprice;

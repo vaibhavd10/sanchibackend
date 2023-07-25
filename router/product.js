@@ -64,10 +64,17 @@ router.get("/get-updated/:id", async (req, res) => {
             return null
           }
         });
-        let length = historydistributor.length - 1;
+        if(historydistributor.length === 0){
+          console.log("history distributor length is 0")
+          return null ;
+        }else{
+          console.log("history distributor length is not 0")
+          let length = historydistributor.length - 1;
         let historyprice = historydistributor[length].D.price;
         console.log("object=--", historyprice);
         P.price = historyprice;
+        }
+        
       }
     });
 

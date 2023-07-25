@@ -40,16 +40,19 @@ router.post("/registerUser", async (req, res) => {
     role,
     latitude,
     longitude,
-  } = req?.body.userData;
+  } = req?.body;
   console.log("dghsdg", req?.body);
   const userExist = await User.findOne({ email: email });
   if (userExist) {
     res.status(500).json({ message: "User already exists", status: false });
     return;
   }
+  console.log("exist ke baaddd");
   const Hash = await bcrypt.hash(password, 10);
   try {
+    console.log("role check se pehle");
     if (role == "retailer") {
+      console.log("retaile wala condit");
       const query = { city: city };
       console.log("cityy", query);
 
@@ -89,26 +92,27 @@ router.post("/registerUser", async (req, res) => {
         res
           .status(201)
           .json({ message: "Data added", status: true, userdata: user });
-      } else {
-        const data = new User({
-          name,
-          email,
-          city,
-          state,
-          contact,
-          latitude,
-          longitude,
-          role,
-          password: Hash,
-        });
-
-        // console.log("sddsd", data);
-
-        const user = await data.save();
-        res
-          .status(201)
-          .json({ message: "Data added", status: true, userdata: user });
       }
+    } else {
+      console.log("distributor wala");
+      const data = new User({
+        name,
+        email,
+        city,
+        state,
+        contact,
+        latitude,
+        longitude,
+        role,
+        password: Hash,
+      });
+
+      // console.log("sddsd", data);
+
+      const user = await data.save();
+      res
+        .status(201)
+        .json({ message: "Data added", status: true, userdata: user });
     }
   } catch (error) {
     res.status(500).json({ message: "Something wrong !!" });
